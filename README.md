@@ -1,6 +1,6 @@
-This is a very-vibecoded agent for analyzing and comparing the output from [pprof](https://pkg.go.dev/runtime/pprof). Might (operative word!) help you with debugging across multiple implementations of _some_ bit of code. Over the past few months I found that Haiku (obviously), Sonnet, and then even Opus 4.6 / 4.7 struggled with _really_ digging into pprof output. I have not done evals (obviously), but I've found (incredibly anecdotally) that the tool use allows Sonnet 4.6 to peform analysis at least as good as just dumping a profile into the Claude UI w. Opus 4.7.
+This is a very vibecoded agent for analyzing and comparing the outputs from Golang's performance profiler, [pprof](https://pkg.go.dev/runtime/pprof). It might (that's the operative word!) help you with debugging/performance analysis across multiple implementations of a bit of code. Although pprof is relatively structured, over the past few months I found that Haiku (obviously), Sonnet, and then even Opus 4.6 / 4.7 struggled with _really_ digging into pprof output and the implications of specific results. I have not done formal evals (obviously), but I've found (anecdotally) that the tool use allows Sonnet 4.6 to peform analysis "at least as good" as just dumping a profile into the Claude UI w. Opus 4.7.
 
-Here's a toy-ish conversation with the agent that you can try off the bad using the profile included on this repo...
+Here's a toy-ish conversation with the agent that you can ~replicate by cloning this repo, calling `./cmd/loop` to start the agent, 
 
 ```text
 > Take a look at the profile in ./fixtures/pprof/inv.query.heap.pprof, what's hot?
