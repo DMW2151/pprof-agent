@@ -84,8 +84,8 @@ and stop-the-world (or concurrent GC) overhead proportional to object count.
 merge-style cursor that doesn't need to materialize the result at all.
 The latter is the approach taken by systems like Lucene's
 `ConjunctionScorer` and is essentially free in allocation terms.
+```
 
----
 And here's an example conversation with the agent that _actually_
 improved my quality of life...
 
