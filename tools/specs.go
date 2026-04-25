@@ -1,10 +1,7 @@
 package tools
 
-import "encoding/json"
-
-// ToolSpec is the single source of truth for a tool's interface. Both the MCP
-// server (via InputSchema) and the local agent loop (via Properties/Required)
-// derive their registrations from these values.
+// ToolSpec describes a tool's interface. The agent loop derives its Anthropic
+// tool registrations from Properties and Required.
 type ToolSpec struct {
 	Name        string
 	Title       string
@@ -13,22 +10,7 @@ type ToolSpec struct {
 	Required    []string
 }
 
-// InputSchema returns a JSON Schema object suitable for mcp.Tool.InputSchema.
-func (s ToolSpec) InputSchema() json.RawMessage {
-	schema := map[string]any{
-		"type":                 "object",
-		"additionalProperties": false,
-		"properties":           s.Properties,
-	}
-	if len(s.Required) > 0 {
-		schema["required"] = s.Required
-	}
-	b, _ := json.Marshal(schema)
-	return b
-}
-
-// Specs lists every tool in registration order. The MCP server registers all
-// except UploadFile; the local agent loop exposes all of them.
+// Specs lists every tool in registration order.
 var Specs = []ToolSpec{
 	ListFilesSpec,
 	UploadFileSpec,
