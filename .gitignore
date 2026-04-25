@@ -1,0 +1,17 @@
+# binaries
+bin/
+pprof-mcp
+loop
+
+# token file — rotate by deleting and re-running `make token`
+.pprof-mcp-token
+
+# logs
+*.log
+
+# macOS
+.DS_Store
+
+# editor
+.idea/
+*.swp
