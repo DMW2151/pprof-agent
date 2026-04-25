@@ -24,6 +24,7 @@ const (
 	QuerySymbol     = "query_symbol"
 	CompareProfiles = "compare_profiles"
 	DeleteProfile   = "delete_profile"
+	InspectFunction = "inspect_function"
 )
 
 func jsonStr(v any) (string, error) {
@@ -93,6 +94,12 @@ func Call(reg *registry.Registry, ctx context.Context, name string, input json.R
 			return "", err
 		}
 		return DeleteProfileHandler(reg)(ctx, in)
+	case InspectFunction:
+		var in InspectFunctionInput
+		if err := json.Unmarshal(input, &in); err != nil {
+			return "", err
+		}
+		return InspectFunctionHandler(reg)(ctx, in)
 	default:
 		return "", fmt.Errorf("unknown tool: %q", name)
 	}
@@ -402,6 +409,31 @@ func DeleteProfileHandler(reg *registry.Registry) func(context.Context, DeletePr
 		return jsonStr(map[string]any{
 			"profile_id": in.ProfileID,
 			"status":     "deleted",
+		})
+	}
+}
+
+type InspectFunctionInput struct {
+	ProfileID string `json:"profile_id"`
+	Function  string `json:"function"`
+	Metric    string `json:"metric,omitempty"`
+}
+
+func InspectFunctionHandler(reg *registry.Registry) func(context.Context, InspectFunctionInput) (string, error) {
+	return func(_ context.Context, in InspectFunctionInput) (string, error) {
+		e, err := reg.Get(in.ProfileID)
+		if err != nil {
+			return "", err
+		}
+		p := e.Profile
+		idx := p.ResolveMetric(in.Metric)
+		matches := pprof.InspectFunction(p, idx, in.Function)
+		return jsonStr(map[string]any{
+			"profile_id": in.ProfileID,
+			"metric":     p.SampleTypes[idx],
+			"query":      in.Function,
+			"matches":    len(matches),
+			"functions":  matches,
 		})
 	}
 }

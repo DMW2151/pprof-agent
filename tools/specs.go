@@ -18,6 +18,7 @@ var Specs = []ToolSpec{
 	ListProfilesSpec,
 	ProfileInfoSpec,
 	AnalyzeProfileSpec,
+	InspectFunctionSpec,
 	FlameTreeSpec,
 	QuerySymbolSpec,
 	CompareProfilesSpec,
@@ -90,7 +91,7 @@ var ProfileInfoSpec = ToolSpec{
 var AnalyzeProfileSpec = ToolSpec{
 	Name:        AnalyzeProfile,
 	Title:       "Analyze Profile",
-	Description: "Return the top-N hotspot functions for the given metric. sort_by='flat' (default) ranks by cost in the function itself; sort_by='cumulative' ranks by total cost including callees — use cumulative to find bottleneck call-path roots. Start every analysis session here.",
+	Description: "Return the top-N hotspot functions for the given metric. sort_by='flat' (default) ranks by cost in the function itself; sort_by='cumulative' ranks by total cost including callees — use cumulative to find bottleneck call-path roots. Start every analysis session here. Follow up with inspect_function to drill into a specific hotspot.",
 	Properties: map[string]any{
 		"profile_id": map[string]any{"type": "string"},
 		"metric":     map[string]any{"type": "string", "description": "Metric name substring, e.g. 'cpu' or 'alloc_space'. Omit to use primary metric."},
@@ -98,6 +99,18 @@ var AnalyzeProfileSpec = ToolSpec{
 		"top_n":      map[string]any{"type": "integer", "description": "Number of results (default 20)"},
 	},
 	Required: []string{"profile_id"},
+}
+
+var InspectFunctionSpec = ToolSpec{
+	Name:        InspectFunction,
+	Title:       "Inspect Function",
+	Description: "Return detailed cost breakdown for a specific function: flat and cumulative cost, direct callers (who calls it), and direct callees (what it calls). Accepts a case-insensitive substring — if multiple functions match, all are returned sorted by cumulative cost. Use after analyze_profile to drill into a hotspot before reading the full flame tree.",
+	Properties: map[string]any{
+		"profile_id": map[string]any{"type": "string"},
+		"function":   map[string]any{"type": "string", "description": "Function name substring to inspect (case-insensitive)"},
+		"metric":     map[string]any{"type": "string", "description": "Metric name substring. Omit to use primary metric."},
+	},
+	Required: []string{"profile_id", "function"},
 }
 
 var FlameTreeSpec = ToolSpec{
