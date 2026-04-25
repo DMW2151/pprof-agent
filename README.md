@@ -12,7 +12,7 @@ analysis "at least as good" as just dumping a profile into the Claude UI
 w. Opus 4.7.
 
 Here's a toy-ish conversation with the agent that you can ~replicate by
-cloning this repo, calling `./cmd/loop` to start the agent,
+cloning this repo and calling `./cmd/loop` to start the agent...
 
 ```text
 > Take a look at the profile in ./fixtures/pprof/inv.query.heap.pprof,
